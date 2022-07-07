@@ -1,0 +1,24 @@
+var Web3 = require('web3')l
+var web3;
+if (typeof web3 != 'undefined') {
+    web3 = new Web3(web3.currentProvider);
+} else {
+    web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8345"));
+}
+
+var _abiArray = [{"inputs":[],"name":"sayHello","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"pure","type":"function"}];
+var _bin = "608060405234801561001057600080fd5b5061017c806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063ef5fb05b14610030575b600080fd5b61003861004e565b6040516100459190610124565b60405180910390f35b60606040518060400160405280600e81526020017f48656c6c6f2c20536e6f776d616e000000000000000000000000000000000000815250905090565b600081519050919050565b600082825260208201905092915050565b60005b838110156100c55780820151818401526020810190506100aa565b838111156100d4576000848401525b50505050565b6000601f19601f8301169050919050565b60006100f68261008b565b6101008185610096565b93506101108185602086016100a7565b610119816100da565b840191505092915050565b6000602082019050818103600083015261013e81846100eb565b90509291505056fea26469706673582212200c958cd76e9425c2e281fa325d43390c4995cde9b23344fc1050a7888b291c4c64736f6c634300080c0033";
+
+var _contract = new web3.eth.Contract(_abiArray);
+// unlock the account with a password provided
+// web3.personal.unlockAccount(web3.eth.accounts[0], 'password');
+_contract
+    .deploy({data:"0x"+_bin})
+    .send({from: "0xF6aA72faB46F20fAd233FB85dd9eb518C98DDE1f",
+          gas: '4700000'
+          }, function (error, transactionHash){
+                console.log(error, transactionHash);
+    })
+    .then(function(newContractInstance){
+        console.log(newContractInstance.options.address)
+    });
